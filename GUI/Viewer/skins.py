@@ -24,9 +24,7 @@ class SkinsWidget(QMainWindow):
 
     def update_seed(self):
         self.seedLabel.setText(f"{self.seedSlider.value()}")
-        self.textToPaste.setText(f"skinseed {self.seedSlider.value()}")
 
     def update_wear(self):
         wearValue = self.wearSlider.value() / 100000
         self.wearLabel.setText(f"{wearValue:.5f}")
-        self.textToPaste.setText(f"skinwear {wearValue:.5f}")

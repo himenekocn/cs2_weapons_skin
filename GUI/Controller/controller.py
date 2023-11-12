@@ -13,8 +13,8 @@ class Controller:
 
         self.skins_details = self.skins.skins_details
         self.weapons = list(self.skins_details.keys())
-
         self.weaponBox.addItems(self.weapons)
+        self.weaponBox.setCurrentIndex(-1)
         self.weaponBox.currentIndexChanged.connect(self.update_skins)
         self.skinBox.currentIndexChanged.connect(self.update_skin_id)
         self.skinswidget.generateSkin.clicked.connect(self.generate_skin)
@@ -43,6 +43,13 @@ class Controller:
         selected_wear = self.skinswidget.wearSlider.value() / 100000
         selected_weapon = self.selected_weapon_id
         selected_skin = self.selected_skin_id
-        self.skinswidget.textToPaste.setText(
-            f"skin {selected_skin} {selected_seed} {selected_wear:.5f} {selected_weapon}"
-        )
+        if selected_skin <= 500:
+            self.skinswidget.textToPaste.setText('')
+            self.skinswidget.textToPaste.setText(
+                f"skin {selected_skin} {selected_seed} {selected_wear:.5f} {selected_weapon}"
+            )
+        else:
+            self.skinswidget.textToPaste.setText('')
+            self.skinswidget.textToPaste.setText(
+                f"skin {selected_skin} {selected_seed} {selected_wear:.5f}"
+            )
