@@ -78,6 +78,13 @@ jobs:
         with:
           path: project
 
+      - name: Checkout protobuf-3.21.8
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: protocolbuffers/protobuf
+          ref: 21.x
+          path: project/vendor/protobuf-3.21.8
+
       - name: Checkout hl2sdk-cs2
         uses: actions/checkout@v4
         with:
