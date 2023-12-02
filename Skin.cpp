@@ -76,6 +76,12 @@ std::map<int, std::string> g_WeaponsMap;
 std::map<uint64_t, int> g_PlayerKnifes;
 std::map<uint64_t, std::map<int, SkinParm>> g_PlayerSkins;
 std::map<uint64_t, std::map<int, Sticker>> g_Sticker;
+std::vector<int> knifeIdList = {59, 42, 500, 503, 505, 506, 507, 508, 509, 512, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 525};
+bool isWeaponIdInList(int weaponId, const std::vector<int>& weaponIdList) {
+    // 使用 std::find 来检查 weaponId 是否在列表中
+    // 如果 find 函数返回的是列表的 end()，则表示没有找到
+    return std::find(weaponIdList.begin(), weaponIdList.end(), weaponId) != weaponIdList.end();
+}
 
 class GameSessionConfiguration_t { };
 SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
@@ -149,7 +155,7 @@ bool Skin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool lat
 
 	ConVar_Register(FCVAR_GAMEDLL);
 
-	g_WeaponsMap = {{59,"weapon_knife"},{42,"weapon_knife"},{26,"weapon_bizon"},{27,"weapon_mac10"},{34,"weapon_mp9"},{19,"weapon_p90"},{24,"weapon_ump45"},{7,"weapon_ak47"},{8,"weapon_aug"},{10,"weapon_famas"},{13,"weapon_galilar"},{16,"weapon_m4a1"},{60,"weapon_m4a1_silencer"},{39,"weapon_sg556"},{9,"weapon_awp"},{11,"weapon_g3sg1"},{38,"weapon_scar20"},{40,"weapon_ssg08"},{29,"weapon_mag7"},{35,"weapon_nova"},{29,"weapon_sawedoff"},{25,"weapon_xm1014"},{14,"weapon_m249"},{9,"weapon_awp"},{28,"weapon_negev"},{1,"weapon_deagle"},{2,"weapon_elite"},{3,"weapon_fiveseven"},{4,"weapon_glock"},{32,"weapon_hkp2000"},{36,"weapon_p250"},{30,"weapon_tec9"},{61,"weapon_usp_silencer"},{63,"weapon_cz75a"},{64,"weapon_revolver"}};
+	g_WeaponsMap = {{59,"weapon_knife"},{42,"weapon_knife"},{26,"weapon_bizon"},{27,"weapon_mac10"},{34,"weapon_mp9"},{19,"weapon_p90"},{24,"weapon_ump45"},{7,"weapon_ak47"},{8,"weapon_aug"},{10,"weapon_famas"},{13,"weapon_galilar"},{16,"weapon_m4a1"},{60,"weapon_m4a1_silencer"},{39,"weapon_sg556"},{9,"weapon_awp"},{11,"weapon_g3sg1"},{38,"weapon_scar20"},{40,"weapon_ssg08"},{29,"weapon_mag7"},{35,"weapon_nova"},{29,"weapon_sawedoff"},{25,"weapon_xm1014"},{14,"weapon_m249"},{9,"weapon_awp"},{28,"weapon_negev"},{1,"weapon_deagle"},{2,"weapon_elite"},{3,"weapon_fiveseven"},{4,"weapon_glock"},{32,"weapon_hkp2000"},{36,"weapon_p250"},{30,"weapon_tec9"},{61,"weapon_usp_silencer"},{63,"weapon_cz75a"},{64,"weapon_revolver"},{500, "weapon_knife"}, {503, "weapon_knife"}, {505, "weapon_knife"}, {506, "weapon_knife"}, {507, "weapon_knife"}, {508, "weapon_knife"}, {509, "weapon_knife"}, {512, "weapon_knife"}, {514, "weapon_knife"}, {515, "weapon_knife"}, {516, "weapon_knife"}, {517, "weapon_knife"}, {518, "weapon_knife"}, {519, "weapon_knife"}, {520, "weapon_knife"}, {521, "weapon_knife"}, {522, "weapon_knife"}, {523, "weapon_knife"}, {525, "weapon_knife"}};
 		
 	#ifdef _WIN32	
 	byte* vscript = (byte*)FindSignature("vscript.dll", "\xBE\x01\x3F\x3F\x3F\x2B\xD6\x74\x61\x3B\xD6");
@@ -296,7 +302,7 @@ void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity)
 					pBasePlayerWeapon->m_AttributeManager().m_Item().m_AttributeList().AddAttribute(sticker_parm->second.sticker_pos,sticker_parm->second.sticker_id); //sticker slot 0 id
 			}
 
-			if(weaponId == 59 || weaponId == 42)
+			if(isWeaponIdInList(weaponId, knifeIdList))
 			{
 				auto knife_idx = g_PlayerKnifes.find(steamid);
 				if(knife_idx == g_PlayerKnifes.end())return;
@@ -340,16 +346,16 @@ CON_COMMAND_F(skin, "修改皮肤", FCVAR_CLIENT_CAN_EXECUTE)
 	
 	if(args.ArgC() == 1)
 	{
-		FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01访问：http://skin.ymos.top/ 生成皮肤修改参数",nullptr, nullptr, nullptr, nullptr);
-		FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01开源仓库：https://github.com/yuzhouUvU/cs2_weapons_skin",nullptr, nullptr, nullptr, nullptr);
+		FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01访问：https://himeneko.cn/cs2skin 生成皮肤修改参数",nullptr, nullptr, nullptr, nullptr);
+		FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01生成参数后返回游戏控制台输入",nullptr, nullptr, nullptr, nullptr);
 		return;
 	}
 	char buf[255] = {0};
-	if(weaponId == 59 || weaponId == 42)
+	if(isWeaponIdInList(weaponId, knifeIdList))
 	{
 		if(args.ArgC() != 5)
 		{
-			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01修改刀具控制台输入 'skin 编号 模板 磨损 刀具编号'",nullptr, nullptr, nullptr, nullptr);
+			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01修改刀具控制台输入 'skin 编号 模板 磨损 刀具编号'",nullptr, nullptr, nullptr, nullptr);
 			return;
 		}
 		g_PlayerKnifes[steamid] = atoi(args.Arg(4));
@@ -358,19 +364,19 @@ CON_COMMAND_F(skin, "修改皮肤", FCVAR_CLIENT_CAN_EXECUTE)
 	{
 		if(args.ArgC() != 4 && args.ArgC() != 6)
 		{
-			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01修改武器皮肤控制台输入 'skin 编号 模板 磨损'",nullptr, nullptr, nullptr, nullptr);
-			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01添加武器贴纸控制台输入 'skin 编号 模板 磨损 贴纸编号 位置(0-5)'",nullptr, nullptr, nullptr, nullptr);
+			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01修改武器皮肤控制台输入 'skin 编号 模板 磨损'",nullptr, nullptr, nullptr, nullptr);
+			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01添加武器贴纸控制台输入 'skin 编号 模板 磨损 贴纸编号 位置(0-5)'",nullptr, nullptr, nullptr, nullptr);
 			return;
 		}
 	}
 
-	if(args.ArgC() == 6 && weaponId!= 59 && weaponId!= 42)
+	if(args.ArgC() == 6 && isWeaponIdInList(weaponId, knifeIdList) != true)
 	{
 		g_Sticker[steamid][weaponId].sticker_id = atoi(args.Arg(4));
 		int pos = atoi(args.Arg(5));
 		if(pos > 5 || pos < 0)
 		{
-			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [SKIN] \x01位置请输入(0-5)之间的数字 ",nullptr, nullptr, nullptr, nullptr);
+			FnUTIL_ClientPrint(pPlayerController, 3, " \x04 [ 雪碧xHIME ] \x01位置请输入(0-5)之间的数字 ",nullptr, nullptr, nullptr, nullptr);
 			return;
 		}
 		switch (pos)
@@ -397,7 +403,7 @@ CON_COMMAND_F(skin, "修改皮肤", FCVAR_CLIENT_CAN_EXECUTE)
 			break;
 		}
 
-		sprintf(buf, " \x04 [SKIN] \x01已修改贴纸 贴纸编号:%d 位置:%d",g_Sticker[steamid][weaponId].sticker_id, pos);
+		sprintf(buf, " \x04 [ 雪碧xHIME ] \x01已修改贴纸 贴纸编号:%d 位置:%d",g_Sticker[steamid][weaponId].sticker_id, pos);
 		FnUTIL_ClientPrint(pPlayerController, 3, buf,nullptr, nullptr, nullptr, nullptr);
 	}
 
@@ -414,7 +420,7 @@ CON_COMMAND_F(skin, "修改皮肤", FCVAR_CLIENT_CAN_EXECUTE)
 	//pItemServices->GiveNamedItem(weapon_name->second.c_str());
 	// g_pGameRules->PlayerRespawn(static_cast<CCSPlayerPawn*>(pPlayerPawn));
 	//META_CONPRINTF( "called by %lld\n", steamid);
-	sprintf(buf, " \x04 [SKIN] \x01已修改皮肤 编号:%d 模板:%d 磨损:%f",g_PlayerSkins[steamid][weaponId].m_nFallbackPaintKit,g_PlayerSkins[steamid][weaponId].m_nFallbackSeed,g_PlayerSkins[steamid][weaponId].m_flFallbackWear);
+	sprintf(buf, " \x04 [ 雪碧xHIME ] \x01已修改皮肤 编号:%d 模板:%d 磨损:%f",g_PlayerSkins[steamid][weaponId].m_nFallbackPaintKit,g_PlayerSkins[steamid][weaponId].m_nFallbackSeed,g_PlayerSkins[steamid][weaponId].m_flFallbackWear);
 	FnUTIL_ClientPrint(pPlayerController, 3, buf,nullptr, nullptr, nullptr, nullptr);
 }
 
